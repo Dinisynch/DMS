@@ -6,7 +6,7 @@ from app.database import get_session
 from app.models.user import User
 from app.schemas.user import SUserRegister, SUserAuth
 from app.core.security import get_password_hash, authenticate_user
-from app.core.jwt import create_access_token
+from app.core.jwt import create_access_token, get_current_user
 
 router = APIRouter()
 
@@ -49,3 +49,13 @@ async def auth_user(response: Response, user_data: SUserAuth, session: AsyncSess
     response.set_cookie(key="users_access_token", value=access_token, httponly=True)
     return {'access_token': access_token, 'refresh_token': None}
 
+
+@router.get("/me/")
+async def get_me(user_data: User = Depends(get_current_user)):
+    return user_data
+
+
+@router.post("/logout/")
+async def logout_user(response: Response):
+    response.delete_cookie(key="users_access_token")
+    return {'message': 'Пользователь успешно вышел из системы'}
