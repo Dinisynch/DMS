@@ -11,3 +11,15 @@ class SUserRegister(BaseModel):
 class SUserAuth(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=5, max_length=50)
+
+from pydantic import BaseModel, EmailStr
+
+
+class SUserOut(BaseModel):
+    id: int
+    email: EmailStr
+    first_name: str
+    last_name: str
+
+    class Config:
+        from_attributes = True

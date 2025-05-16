@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncConnection
 from app.database import Base
-from app.models.user import User
+from app import models
 from app.core.config import get_db_url
 
 config = context.config
