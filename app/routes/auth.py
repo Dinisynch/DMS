@@ -4,11 +4,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
 from app.models.user import User
-from app.schemas.user import SUserRegister, SUserAuth
+from app.schemas.user import SUserRegister, SUserAuth, SUserOut
 from app.core.security import get_password_hash, authenticate_user
 from app.core.jwt import create_access_token, get_current_user
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/auth",
+    tags=["auth"]
+)
 
 @router.post("/register/")
 async def register_user(user_data: SUserRegister, session: AsyncSession = Depends(get_session)) -> dict:
@@ -50,7 +53,7 @@ async def auth_user(response: Response, user_data: SUserAuth, session: AsyncSess
     return {'access_token': access_token, 'refresh_token': None}
 
 
-@router.get("/me/")
+@router.get("/me/", response_model=SUserOut)
 async def get_me(user_data: User = Depends(get_current_user)):
     return user_data
 
